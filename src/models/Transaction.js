@@ -12,6 +12,12 @@ const TransactionSchema = new mongoose.Schema({
   date: {
     type: Date,
     default: Date.now,
+    validate: {
+      validator: function (value) {
+        return value <= new Date(); // restricts to today or earlier
+      },
+      message: "Transaction date cannot be in the future.",
+    },
   },
 });
 

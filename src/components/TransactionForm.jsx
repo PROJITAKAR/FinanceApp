@@ -1,29 +1,33 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
-import * as yup from 'yup';
-import { yupResolver } from '@hookform/resolvers/yup';
-import { format } from 'date-fns';
+import { useEffect, useState } from "react";
+import { useForm, Controller } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { format } from "date-fns";
 
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Label } from '@/components/ui/label';
-import { Calendar } from '@/components/ui/calendar';
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Label } from "@/components/ui/label";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from '@/components/ui/popover';
+} from "@/components/ui/popover";
 
 const schema = yup.object({
   amount: yup
     .number()
-    .typeError('Amount must be a number')
-    .positive('Must be positive')
-    .required('Amount is required'),
-  description: yup.string().required('Description is required'),
-  date: yup.date().typeError('Date is required').required('Date is required'),
+    .typeError("Amount must be a number")
+    .positive("Must be positive")
+    .required("Amount is required"),
+  description: yup.string().required("Description is required"),
+  date: yup
+    .date()
+    .typeError("Date is required")
+    .max(new Date(), "Date cannot be in the future") // ✅ Add this line
+    .required("Date is required"),
 });
 
 const TransactionForm = ({ onSaved, editData, clearEdit }) => {
@@ -37,8 +41,8 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      amount: '',
-      description: '',
+      amount: "",
+      description: "",
       date: new Date(),
     },
   });
@@ -47,21 +51,23 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
 
   useEffect(() => {
     if (editData) {
-      setValue('amount', editData.amount);
-      setValue('description', editData.description);
-      setValue('date', new Date(editData.date));
+      setValue("amount", editData.amount);
+      setValue("description", editData.description);
+      setValue("date", new Date(editData.date));
     }
   }, [editData, setValue]);
 
   const onSubmit = async (data) => {
     setSubmitting(true);
-    const url = editData ? `/api/transactions/${editData._id}` : '/api/transactions';
-    const method = editData ? 'PUT' : 'POST';
+    const url = editData
+      ? `/api/transactions/${editData._id}`
+      : "/api/transactions";
+    const method = editData ? "PUT" : "POST";
 
     try {
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...data,
           amount: Number(data.amount),
@@ -71,7 +77,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
 
       if (!res.ok) {
         const error = await res.json();
-        alert(error.error || 'Failed to save transaction.');
+        alert(error.error || "Failed to save transaction.");
         return;
       }
 
@@ -79,7 +85,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
       clearEdit();
       onSaved();
     } catch (err) {
-      alert('Network error. Please try again.');
+      alert("Network error. Please try again.");
     } finally {
       setSubmitting(false);
     }
@@ -88,7 +94,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
   return (
     <div>
       <h2 className="text-xl font-semibold text-white mb-6">
-        {editData ? 'Edit Transaction' : 'Transaction Details'}
+        {editData ? "Edit Transaction" : "Transaction Details"}
       </h2>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -102,7 +108,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
             type="number"
             step="0.01"
             placeholder="0.00"
-            {...register('amount')}
+            {...register("amount")}
             className="bg-slate-700 border-slate-600 text-white placeholder-slate-400"
           />
           {errors.amount && (
@@ -119,11 +125,13 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
             id="description"
             type="text"
             placeholder="Enter transaction description"
-            {...register('description')}
+            {...register("description")}
             className="bg-slate-700 border-slate-600 text-white placeholder-slate-400"
           />
           {errors.description && (
-            <p className="text-red-400 text-sm mt-1">{errors.description.message}</p>
+            <p className="text-red-400 text-sm mt-1">
+              {errors.description.message}
+            </p>
           )}
         </div>
 
@@ -142,7 +150,11 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
                     variant="outline"
                     className="w-full justify-start text-left font-normal bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
                   >
-                    {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                    {field.value ? (
+                      format(field.value, "PPP")
+                    ) : (
+                      <span>Pick a date</span>
+                    )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0 bg-slate-800 border-slate-600 text-white">
@@ -151,6 +163,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
                     selected={field.value}
                     onSelect={field.onChange}
                     initialFocus
+                    disabled={(date) => date > new Date()} // ✅ Add this line
                   />
                 </PopoverContent>
               </Popover>
@@ -167,16 +180,16 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
             type="submit"
             disabled={submitting}
             className={`flex-1 bg-purple-600 hover:bg-purple-700 text-white transition-colors duration-200 ${
-              submitting ? 'opacity-50 cursor-not-allowed' : ''
+              submitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
             {submitting
               ? editData
-                ? 'Updating...'
-                : 'Saving...'
+                ? "Updating..."
+                : "Saving..."
               : editData
-              ? 'Update'
-              : 'Add'}{' '}
+              ? "Update"
+              : "Add"}{" "}
             Transaction
           </Button>
 
