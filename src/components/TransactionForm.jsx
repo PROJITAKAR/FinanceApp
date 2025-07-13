@@ -1,3 +1,4 @@
+// TransactionForm.js - Mobile Responsive Version
 "use client";
 
 import { useEffect, useState } from "react";
@@ -26,7 +27,7 @@ const schema = yup.object({
   date: yup
     .date()
     .typeError("Date is required")
-    .max(new Date(), "Date cannot be in the future") // ✅ Add this line
+    .max(new Date(), "Date cannot be in the future")
     .required("Date is required"),
 });
 
@@ -92,15 +93,15 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
   };
 
   return (
-    <div>
-      <h2 className="text-xl font-semibold text-white mb-6">
+    <div className="w-full">
+      <h2 className="text-lg sm:text-xl font-semibold text-white mb-4 sm:mb-6">
         {editData ? "Edit Transaction" : "Transaction Details"}
       </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
         {/* Amount */}
         <div>
-          <Label htmlFor="amount" className="text-slate-300 mb-2 block">
+          <Label htmlFor="amount" className="text-slate-300 mb-2 block text-sm sm:text-base">
             Amount (₹)
           </Label>
           <Input
@@ -109,16 +110,16 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
             step="0.01"
             placeholder="0.00"
             {...register("amount")}
-            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base h-10 sm:h-12"
           />
           {errors.amount && (
-            <p className="text-red-400 text-sm mt-1">{errors.amount.message}</p>
+            <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.amount.message}</p>
           )}
         </div>
 
         {/* Description */}
         <div>
-          <Label htmlFor="description" className="text-slate-300 mb-2 block">
+          <Label htmlFor="description" className="text-slate-300 mb-2 block text-sm sm:text-base">
             Description
           </Label>
           <Input
@@ -126,10 +127,10 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
             type="text"
             placeholder="Enter transaction description"
             {...register("description")}
-            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400"
+            className="bg-slate-700 border-slate-600 text-white placeholder-slate-400 text-sm sm:text-base h-10 sm:h-12"
           />
           {errors.description && (
-            <p className="text-red-400 text-sm mt-1">
+            <p className="text-red-400 text-xs sm:text-sm mt-1">
               {errors.description.message}
             </p>
           )}
@@ -137,7 +138,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
 
         {/* Date (shadcn Calendar) */}
         <div>
-          <Label htmlFor="date" className="text-slate-300 mb-2 block">
+          <Label htmlFor="date" className="text-slate-300 mb-2 block text-sm sm:text-base">
             Date
           </Label>
           <Controller
@@ -147,8 +148,9 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
+                    id="date"
                     variant="outline"
-                    className="w-full justify-start text-left font-normal bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
+                    className="w-full justify-start text-left font-normal bg-slate-700 border-slate-600 text-white hover:bg-slate-600 h-10 sm:h-12 text-sm sm:text-base"
                   >
                     {field.value ? (
                       format(field.value, "PPP")
@@ -163,23 +165,23 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
                     selected={field.value}
                     onSelect={field.onChange}
                     initialFocus
-                    disabled={(date) => date > new Date()} // ✅ Add this line
+                    disabled={(date) => date > new Date()}
                   />
                 </PopoverContent>
               </Popover>
             )}
           />
           {errors.date && (
-            <p className="text-red-400 text-sm mt-1">{errors.date.message}</p>
+            <p className="text-red-400 text-xs sm:text-sm mt-1">{errors.date.message}</p>
           )}
         </div>
 
         {/* Buttons */}
-        <div className="flex gap-3 pt-4">
+        <div className="flex flex-col sm:flex-row gap-3 pt-4">
           <Button
             type="submit"
             disabled={submitting}
-            className={`flex-1 bg-purple-600 hover:bg-purple-700 text-white transition-colors duration-200 ${
+            className={`flex-1 bg-purple-600 hover:bg-purple-700 text-white transition-colors duration-200 h-10 sm:h-12 text-sm sm:text-base ${
               submitting ? "opacity-50 cursor-not-allowed" : ""
             }`}
           >
@@ -200,7 +202,7 @@ const TransactionForm = ({ onSaved, editData, clearEdit }) => {
                 reset();
                 clearEdit();
               }}
-              className="bg-slate-600 hover:bg-slate-700 text-white"
+              className="bg-slate-600 hover:bg-slate-700 text-white h-10 sm:h-12 text-sm sm:text-base"
             >
               Cancel
             </Button>

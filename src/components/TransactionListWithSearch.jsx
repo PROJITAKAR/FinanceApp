@@ -1,3 +1,4 @@
+// TransactionListWithSearch.js - Mobile Responsive Version
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -38,13 +39,15 @@ const TransactionListWithSearch = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-900 text-white p-6">
+    <div className="min-h-screen bg-slate-900 text-white p-3 sm:p-6">
       <div className="max-w-4xl mx-auto">
-        <div className="mb-8">
-          <div className="flex items-center justify-between">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">All Transactions</h1>
-              <p className="text-slate-300">
+              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-2">
+                All Transactions
+              </h1>
+              <p className="text-slate-300 text-sm sm:text-base">
                 {searchQuery
                   ? `Showing results for "${searchQuery}"`
                   : 'Manage your financial transactions'}
@@ -54,7 +57,7 @@ const TransactionListWithSearch = () => {
             {searchQuery && (
               <Button
                 variant="ghost"
-                className="text-sm text-purple-400 hover:underline"
+                className="text-sm text-purple-400 hover:underline self-start sm:self-center"
                 onClick={handleReset}
               >
                 Reset
@@ -63,7 +66,7 @@ const TransactionListWithSearch = () => {
           </div>
         </div>
 
-        <div className="bg-slate-800 rounded-lg p-6 border border-slate-700 shadow-lg">
+        <div className="bg-slate-800 rounded-lg p-3 sm:p-6 border border-slate-700 shadow-lg">
           {transactions.length > 0 ? (
             <TransactionList
               transactions={transactions}
@@ -73,7 +76,7 @@ const TransactionListWithSearch = () => {
               }
             />
           ) : (
-            <p className="text-slate-400 text-center py-12">
+            <p className="text-slate-400 text-center py-8 sm:py-12 text-sm sm:text-base">
               {searchQuery
                 ? `No results found for "${searchQuery}".`
                 : 'No transactions found.'}

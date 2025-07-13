@@ -30,23 +30,31 @@ const ExpenseChart = ({ transactions }) => {
     .sort((a, b) => a.sortKey - b.sortKey); // sort chronologically
 
   return (
-    <div className="h-80 pb-2">
-      <h2 className="text-xl font-semibold mb-4 text-white">Monthly Expenses</h2>
+    <div className="h-64 sm:h-80 pb-2">
+      <h2 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4 text-white">Monthly Expenses</h2>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
-          margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
+          margin={{ 
+            top: 20, 
+            right: 10, 
+            left: 10, 
+            bottom: 5 
+          }}
         >
           <XAxis
             dataKey="month"
-            tick={{ fill: '#cbd5e1', fontSize: 12 }}
+            tick={{ fill: '#cbd5e1', fontSize: 10 }}
             axisLine={{ stroke: '#475569' }}
             tickLine={{ stroke: '#475569' }}
+            interval={0}
+            height={40}
           />
           <YAxis
-            tick={{ fill: '#cbd5e1', fontSize: 12 }}
+            tick={{ fill: '#cbd5e1', fontSize: 10 }}
             axisLine={{ stroke: '#475569' }}
             tickLine={{ stroke: '#475569' }}
+            width={40}
           />
           <Tooltip
             contentStyle={{
@@ -54,8 +62,9 @@ const ExpenseChart = ({ transactions }) => {
               border: '1px solid #475569',
               borderRadius: '8px',
               color: '#fff',
+              fontSize: '12px'
             }}
-            formatter={(value) => [`${value.toFixed(2)}`, 'Amount']}
+            formatter={(value) => [`₹${value.toFixed(2)}`, 'Amount']}
           />
           <Bar dataKey="total" fill="#9333ea" radius={[4, 4, 0, 0]} />
         </BarChart>
